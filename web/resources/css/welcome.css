@@ -1,0 +1,12 @@
+body {
+    /*background-color: #dda1c7;*/ 
+    background: url('../imgs/banner.jpg');
+    background-size: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+h1{
+    font-size: 2.3rem;
+}

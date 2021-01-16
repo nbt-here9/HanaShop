@@ -1,0 +1,76 @@
+.card-custom {
+    overflow: hidden;
+    min-height: 450px;
+    box-shadow: 0 0 15px rgba(10, 10, 10, 0.3);
+}
+
+.card-custom-img {
+    height: 200px;
+    min-height: 200px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    border-color: inherit;
+}
+
+/* First border-left-width setting is a fallback */
+/*.card-custom-img::after {
+    position: absolute;
+    content: '';
+    top: 161px;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 545px;
+    border-left-width: calc(575px - 5vw);
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: inherit;
+}*/
+
+.card-custom-avatar img {
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(10, 10, 10, 0.3);
+    position: absolute;
+    top: 100px;
+    left: 1.25rem;
+    width: 100px;
+    height: 100px;
+}
+.page-item.active .page-link{
+    background-color: #dda1c7 !important;
+}
+
+#minPrice {
+    color: #17a2b8;
+    font-weight: bold;
+    border:0; 
+}
+#maxPrice{
+    color: #17a2b8;
+    font-weight: bold;
+    border:0; 
+}
+
+.page-link {
+    border-radius: 50px !important;
+    margin-right: 10px;
+    padding: 5px 15px !important;
+}
+
+/*.admin tbl {
+    background-color: #d6f9ff !important;
+}*/
+.table-warning tbody+tbody, .table-warning td, .table-warning th, .table-warning thead th {
+    border-color: #d6f9ff !important;
+    background-color: #d6f9ff !important;
+}
+
+.table .thead-light th {
+    color: #ffffff !important;
+    background-color: #17a2b8 !important;
+    border-color: #17a2b8 !important;
+}
