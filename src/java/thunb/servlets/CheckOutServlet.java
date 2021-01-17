@@ -6,6 +6,10 @@
 package thunb.servlets;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Map;
+import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,12 +17,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import thunb.cart.CartItemObject;
 import thunb.cart.CartObject;
+import thunb.daos.OrderDetailsDAO;
 import thunb.daos.OrdersDAO;
 import thunb.daos.ProductsDAO;
 import thunb.dtos.UsersDTO;
 import thunb.errors.CheckOutErrors;
 import thunb.utilities.ConstantsKey;
+import thunb.utilities.Utilities;
 
 /**
  *
@@ -70,20 +77,52 @@ public class CheckOutServlet extends HttpServlet {
                         request.setAttribute("ERRORS", errors);
                     } //Check out
                     else {
-                        String txtPaymentMethod = request.getParameter("txtPaymentMethod");
-                        if (txtPaymentMethod != null && !txtPaymentMethod.trim().isEmpty() && txtPaymentMethod.matches("\\d+")) {
-                            UsersDTO loginUser = (UsersDTO) session.getAttribute("LOGIN_USER");
-                            String loginUsername = null;
-                            if (loginUser != null) {
-                                loginUsername = loginUser.getUsername();
-                            }
-                            
-                            OrdersDAO ordersDAO = new OrdersDAO();
-                        ProductsDAO productsDAO = new ProductsDAO();
+//                        String txtPaymentMethod = request.getParameter("txtPaymentMethod");
+//                        if (txtPaymentMethod != null && !txtPaymentMethod.trim().isEmpty() && txtPaymentMethod.matches("\\d+")) {
+//                            int paymentMethod = Integer.parseInt(txtPaymentMethod);
+                        int paymentMethod = ConstantsKey.COD;
+                        String newOrderID = Utilities.OrderIDGenerate();
+
+                        UsersDTO loginUser = (UsersDTO) session.getAttribute("LOGIN_USER");
+                        String loginUsername = null;
+                        if (loginUser != null) {
+                            loginUsername = loginUser.getUsername();
                         }
+
+                        OrdersDAO ordersDAO = new OrdersDAO();
+                        ProductsDAO productsDAO = new ProductsDAO();
+
+                        Timestamp orderDate = Utilities.getCurrentTime();
+                        boolean newOrder = ordersDAO.createOrder(newOrderID, loginUsername, txtName, txtAddress, 
+                                txtPhone, orderDate, cart.total(), paymentMethod);
+                        if (newOrder) {
+                            OrderDetailsDAO orderDetailsDAO = new OrderDetailsDAO();
+                            Map<Integer, CartItemObject> items = cart.getItems();
+                            boolean rs = orderDetailsDAO.addOrderDetails(newOrderID, items);
+                            if (!rs) {
+                                request.setAttribute("CHECKOUT_FAILED", "FAILED");
+                                //delete order
+                            } else {
+                                if (paymentMethod == ConstantsKey.COD) {
+                                    boolean decreaseStock = productsDAO.decreaseQuantityByID(items);
+                                    if (decreaseStock) {
+                                        request.setAttribute("CHECKOUT_SUCCESS", newOrderID);
+                                        session.removeAttribute("CART");
+
+                                    } 
+                                }
+                            }
+                        }
+//                        }
                     }
                 }
             }
+        } catch (NumberFormatException ex) {
+            log("CheckOutServlet_NumberFormatException:" + ex.getMessage());
+        } catch (SQLException ex) {
+            log("CheckOutServlet_SQLException:" + ex.getMessage());
+        } catch (NamingException ex) {
+            log("CheckOutServlet_NamingException:" + ex.getMessage());
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);

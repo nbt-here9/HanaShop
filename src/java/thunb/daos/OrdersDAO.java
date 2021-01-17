@@ -41,20 +41,24 @@ public class OrdersDAO {
         }
     }
     
-    public boolean createOrder(String orderID,String username,String customerName,String customerAddress,String phone,long total,int paymentMethod) throws SQLException, NamingException{
+    public boolean createOrder(String orderID,String username,String customerName,
+            String customerAddress,String phone, Timestamp orderDate,long total,int paymentMethod) 
+            throws SQLException, NamingException{
         try{
             cn= DBHelpers.makeConnection();
             if(cn!=null){
-                String sql = "insert into Orders(orderID,username,customerName,customerAddress,customerPhone,total,paymentMethod) "
-                        + "values(?,?,?,?,?,?,?)";
+                String sql = "INSERT INTO Orders (orderID,username,customerName,"
+                        + "customerAddress,customerPhone,orderDate,total,paymentMethod) "
+                        + "VALUES (?,?,?,?,?,?,?,?)";
                 pst = cn.prepareStatement(sql);
                 pst.setString(1, orderID);
                 pst.setString(2, username);
                 pst.setNString(3, customerName);
                 pst.setNString(4, customerAddress);
                 pst.setString(5, phone);
-                pst.setLong(6, total);
-                pst.setInt(7, paymentMethod);
+                pst.setTimestamp(6, orderDate);
+                pst.setLong(7, total);
+                pst.setInt(8, paymentMethod);
                 int result = pst.executeUpdate();
                 if(result>0)return true;
             }   
@@ -83,31 +87,4 @@ public class OrdersDAO {
         return false;
     }
     
-//    public OrdersDTOExtend getOrderByID(String orderID, String username) throws NamingException, SQLException{
-//        OrdersDTOExtend order = null;
-//        try{
-//            cn= DBHelpers.makeConnection();
-//            if(cn!=null){
-//                String sql = "select customerName,customerAddress,customerPhone,orderDate,paymentMethod,paymentStatus,total "
-//                        + "from Orders where orderID=? and username=?";
-//                pst = cn.prepareStatement(sql);
-//                pst.setString(1, orderID);
-//                pst.setString(2, username);
-//                rs = pst.executeQuery();
-//                if(rs.next()){
-//                    String customerName = rs.getNString("customerName");
-//                    String customerAddress = rs.getNString("customerAddress");
-//                    String customerPhone = rs.getString("customerPhone");
-//                    Timestamp orderDate =rs.getTimestamp("orderDate");
-//                    int paymentMethod = rs.getInt("paymentMethod");
-//                    int paymentStatus = rs.getInt("paymentStatus");
-//                    long total = rs.getLong("total");
-//                    order=new OrdersDTOExtend(null,null,orderID, username, customerName, customerAddress, customerPhone, orderDate, paymentMethod, paymentStatus,total,null);
-//                }
-//            }   
-//        }finally{
-//            closeConnection();
-//        }
-//        return order;
-//    }
 }

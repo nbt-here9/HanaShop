@@ -93,22 +93,21 @@ public class LoadForCheckOutServlet extends HttpServlet {
                         }
                         
                         
-                        
                         //Load Payment
-                        PaymentMethodsDAO paymentMethodDAO = new PaymentMethodsDAO();
-                        int total = paymentMethodDAO.getPaymentMethodsList();
-                        if (total > 0) {
-                            request.setAttribute("PAYMENT_LIST", paymentMethodDAO.getMethodList());
-                        }
-
-                        if (flag) {
-                            String action = (String) request.getAttribute("Action");
-                            if (action != null) {
-                                 url += "?Action=" + action;
-                            }
-                        } else {
-                            url = ConstantsKey.VIEW_CART_PAGE;
-                        }
+//                        PaymentMethodsDAO paymentMethodDAO = new PaymentMethodsDAO();
+//                        int total = paymentMethodDAO.getPaymentMethodsList();
+//                        if (total > 0) {
+//                            request.setAttribute("PAYMENT_LIST", paymentMethodDAO.getMethodList());
+//                        }
+//
+//                        if (flag) {
+//                            String action = (String) request.getAttribute("Action");
+//                            if (action != null) {
+//                                 url += "?Action=" + action;
+//                            }
+//                        } else {
+//                            url = ConstantsKey.VIEW_CART_PAGE;
+//                        }
 
                     }
                 }

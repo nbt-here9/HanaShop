@@ -14,7 +14,10 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.naming.NamingException;
+import thunb.cart.CartItemObject;
+import thunb.dtos.OrderDetailsDTO;
 import thunb.dtos.ProductsDTO;
 import thunb.utilities.ConstantsKey;
 import thunb.utilities.DBHelpers;
@@ -420,71 +423,57 @@ public class ProductsDAO implements Serializable {
         return -1;
     }
 
-//    public boolean decreaseQuantityByID(List<OrderDetailsDTO> items) 
-//            throws SQLException, NamingException{
-//        try{
-//            cn = DBHelpers.makeConnection();
-//            if(cn!=null){
-//                cn.setAutoCommit(false);
-//                String sql = "update Products set quantity=quantity-? where productID=?";
-//                pst = cn.prepareStatement(sql);
-//                for(OrderDetailsDTO detail: items){
-//                    pst.setInt(1, detail.getQuantity());
-//                    pst.setInt(2, detail.getProductID());
-//                    pst.addBatch();
-//                    pst.clearParameters();
-//                }
-//                int[] executeBatch = pst.executeBatch();
-//                for(int i : executeBatch){
-//                    if(i==PreparedStatement.EXECUTE_FAILED)return false;
-//                }
-//                cn.commit();
-//                return true;
-//            }
-//        }finally{
-//            closeConnection();
-//        }
-//        return false;
-//    }
-//    public boolean decreaseQuantityByID(Map<Integer,CartItemObject> items) 
-//            throws SQLException, NamingException{
-//        try{
-//            cn = DBHelpers.makeConnection();
-//            if(cn!=null){
-//                cn.setAutoCommit(false);
-//                String sql = "update Products set quantity=quantity-? where productID=?";
-//                pst = cn.prepareStatement(sql);
-//                for (Map.Entry<Integer, CartItemObject> entry : items.entrySet()) {
-//                    pst.setInt(1, entry.getValue().getQuantity());
-//                    pst.setInt(2, entry.getKey());
-//                    pst.addBatch();
-//                    pst.clearParameters();
-//                }
-//                int[] executeBatch = pst.executeBatch();
-//                for(int i : executeBatch){
-//                    if(i==PreparedStatement.EXECUTE_FAILED)return false;
-//                }
-//                cn.commit();
-//                return true;
-//            }
-//        }finally{
-//            closeConnection();
-//        }
-//        return false;
-//    }
-//    public int getLatestProductID() throws SQLException, NamingException{
-//        try{
-//            cn=DBHelpers.makeConnection();
-//            if(cn!=null){
-//                String sql = "SELECT MAX(productID) AS latestProductID "
-//                        + "FROM Products";
-//                pst = cn.prepareStatement(sql);
-//                rs = pst.executeQuery();
-//                if(rs.next())return rs.getInt("latestProductID");
-//            }
-//        }finally{
-//            closeConnection();
-//        }
-//        return -1;
-//    }
+    public boolean decreaseQuantityByID(List<OrderDetailsDTO> items) 
+            throws SQLException, NamingException{
+        try{
+            cn = DBHelpers.makeConnection();
+            if(cn!=null){
+                cn.setAutoCommit(false);
+                String sql = "update Products set quantity=quantity-? where productID=?";
+                pst = cn.prepareStatement(sql);
+                for(OrderDetailsDTO detail: items){
+                    pst.setInt(1, detail.getQuantity());
+                    pst.setInt(2, detail.getProductID());
+                    pst.addBatch();
+                    pst.clearParameters();
+                }
+                int[] executeBatch = pst.executeBatch();
+                for(int i : executeBatch){
+                    if(i==PreparedStatement.EXECUTE_FAILED)return false;
+                }
+                cn.commit();
+                return true;
+            }
+        }finally{
+            closeConnection();
+        }
+        return false;
+    }
+    public boolean decreaseQuantityByID(Map<Integer,CartItemObject> items) 
+            throws SQLException, NamingException{
+        try{
+            cn = DBHelpers.makeConnection();
+            if(cn!=null){
+                cn.setAutoCommit(false);
+                String sql = "update Products set quantity=quantity-? where productID=?";
+                pst = cn.prepareStatement(sql);
+                for (Map.Entry<Integer, CartItemObject> entry : items.entrySet()) {
+                    pst.setInt(1, entry.getValue().getQuantity());
+                    pst.setInt(2, entry.getKey());
+                    pst.addBatch();
+                    pst.clearParameters();
+                }
+                int[] executeBatch = pst.executeBatch();
+                for(int i : executeBatch){
+                    if(i==PreparedStatement.EXECUTE_FAILED)return false;
+                }
+                cn.commit();
+                return true;
+            }
+        }finally{
+            closeConnection();
+        }
+        return false;
+    }
+    
 }

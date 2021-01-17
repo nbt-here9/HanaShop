@@ -74,6 +74,8 @@ public class DispatchServlet extends HttpServlet {
                     url = ConstantsKey.UPDATE_CART_SERVLET;
                 } else if ("Check out".equals(action)) {
                     url = ConstantsKey.CHECK_OUT_PAGE;
+                } else if ("Proceed".equals(action)) {
+                    url = ConstantsKey.CHECK_OUT_SERVLET;
                 } //Admin action
                 else if ("Edit".equals(action)) {
                     url = ConstantsKey.LOAD_PRODUCT_SERVLET;
@@ -84,7 +86,6 @@ public class DispatchServlet extends HttpServlet {
                 }
 
             }
-            
 
         } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);

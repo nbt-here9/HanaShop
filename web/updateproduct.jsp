@@ -63,7 +63,7 @@
                             <div class="row">
                                 <div class="col-md-6 form-group mb-0">
                                     <label>Quantity</label>
-                                    <input class="form-control" type="number" name="txtQuantity" value="${requestScope.LOADED_PRODUCT.quantity}" max="${Integer.MAX_VALUE}" min="0"/><br/>
+                                    <input class="form-control" type="number"  name="txtQuantity" value="${requestScope.LOADED_PRODUCT.quantity}" max="${Integer.MAX_VALUE}" min="0"/><br/>
                                     <c:if test="${not empty requestScope.ERROR.invalidQuantity}">
                                         <font style="color: red">${requestScope.ERROR.invalidQuantity}</font><br/>
                                     </c:if>    

@@ -12,7 +12,8 @@ import java.sql.Timestamp;
  *
  * @author Banh Bao
  */
-public class OdersDTO implements Serializable {
+public class OrdersDTO implements Serializable {
+
     private String orderID;
     private String username;
     private String customerName;
@@ -23,10 +24,10 @@ public class OdersDTO implements Serializable {
     private int paymentStatus;
     private long total;
 
-    public OdersDTO() {
+    public OrdersDTO() {
     }
 
-    public OdersDTO(String orderID, String username, String customerName, String customerAddress, String customerPhone, Timestamp orderDate, int paymentMethod, int paymentStatus, long total) {
+    public OrdersDTO(String orderID, String username, String customerName, String customerAddress, String customerPhone, Timestamp orderDate, int paymentMethod, int paymentStatus, long total) {
         this.orderID = orderID;
         this.username = username;
         this.customerName = customerName;
@@ -163,7 +164,7 @@ public class OdersDTO implements Serializable {
     public void setTotal(long total) {
         this.total = total;
     }
-    
+
     
     
 }

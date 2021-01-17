@@ -18,25 +18,26 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
  * @author Banh Bao
  */
 public class Utilities {
-    
+
     private static String IMAGE_SAVING_FOLDER = "";
 
     public static void setIMAGE_SAVING_FOLDER(String IMAGE_SAVING_FOLDER) {
         Utilities.IMAGE_SAVING_FOLDER = IMAGE_SAVING_FOLDER;
     }
-    
+
     public static Timestamp getCurrentTime() {
         Calendar cd = Calendar.getInstance();
         Timestamp time = new Timestamp(cd.getTimeInMillis());
         return time;
     }
-    
+
     public static void writeImgToServerFile(final String imgFileName, final InputStream fileContent) throws FileNotFoundException, IOException {
         File imgDir = new File(IMAGE_SAVING_FOLDER);
         if (!imgDir.exists()) {
@@ -60,7 +61,7 @@ public class Utilities {
             }
         }
     }
-    
+
     public static void copyImgToContextFolder(final String realPath, final String fileName) throws FileNotFoundException, IOException {
         FileInputStream fis = null;
         FileOutputStream fos = null;
@@ -85,11 +86,11 @@ public class Utilities {
             }
         }
     }
-    
-    public static List<String> loadAllowingExtensionList(String realPath) throws IOException{
+
+    public static List<String> loadAllowingExtensionList(String realPath) throws IOException {
         List<String> allowExtension = new ArrayList<>();
         FileReader fr = null;
-        BufferedReader br =null;
+        BufferedReader br = null;
         try {
             fr = new FileReader(realPath);
             br = new BufferedReader(fr);
@@ -99,11 +100,27 @@ public class Utilities {
                     allowExtension.add(line);
                 }
             }
-        }finally{
-            if(br!=null)br.close();
-            if(fr!=null)fr.close();
+        } finally {
+            if (br != null) {
+                br.close();
+            }
+            if (fr != null) {
+                fr.close();
+            }
         }
         return allowExtension;
     }
-    
+
+    public static String OrderIDGenerate() {
+        String orderID = "";
+        Random rand = new Random();
+        while (orderID.length() < ConstantsKey.ORDERID_LENGTH) {
+            int ASCII = rand.nextInt(90);
+            if ((ASCII > 47 && ASCII < 58) || (ASCII > 64 && ASCII < 91)) {
+                orderID += ((char) ASCII);
+            }
+        }
+        return orderID;
+    }
+
 }

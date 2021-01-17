@@ -19,10 +19,10 @@
         <link rel="stylesheet" type="text/css" href="resources/css/viewcart.css">
     </head>
     <body>
-        <c:if test="${sessionScope.LOAD_PRICE}">
-            <c:redirect url="DispatchServlet?Action=LoadData"/>
-        </c:if>
-        
+        <%--<c:if test="${sessionScope.LOAD_PRICE}">--%>
+        <%--<c:redirect url="DispatchServlet?Action=LoadData"/>--%>
+        <%--</c:if>--%>
+
         <jsp:include page="WEB-INF/header/header.jsp" flush="true"/>
 
         <c:if test="${sessionScope.LOGIN_USER.roleID ne 1}">
@@ -104,8 +104,8 @@
 
                     <c:if test="${empty sessionScope.CART.items}">
                         <h3 class="text-center text-muted">Your Cart is empty
-                            <form action="DispatchServlet">
-                                <input type="submit" class="btn btn btn-info" value="Go Shopping!!!" name="Action" />
+                            <form action="DispatchServlet?Action=LoadData">
+                                <input type="submit" class="btn btn btn-info" value="Go Shopping!!!" name="" />
                             </form>
                         </h3>
 
@@ -124,7 +124,7 @@
 
                 <c:if test="${sessionScope.LOGIN_USER.roleID eq 1}">
                     <h1 class="text-center">You do not have access this function! <br>
-                        <a href="DispatchServlet">Go Back!</a>
+                        <a href="DispatchServlet?Action=LoadData">Go Back!</a>
                     </h1>
                 </c:if>
                 </body>

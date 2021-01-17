@@ -16,15 +16,11 @@ public class ConstantsKey {
     public static final int USER_ROLE = 0;
     public static final int PRODUCT_PER_PAGE = 20;
     public static final int DEFAULT_PAGE = 1;
+    public static final int ORDERID_LENGTH = 10;
+    public static final int COD = 0;
 
     //Resources
-//    public static final String START_UP_SERVLET = "StartUpServlet";
-
-//    public static final String EXCEPTING_ADMIN_SERVLET = "ExceptingAdminRoleServlet";
-//    public static final String ADMIN_DISPATCH_SERVLET = "AdminDispatchServlet";
-
-//    public static final String LOAD_PRODUCTSLIST_SERVLET = "LoadProductsListServlet";
-//    public static final String LOAD_CATEGORIES_STATUS_SERVLET = "LoadCategoryAndStatusServlet";
+    //Servlets
     public static final String SEARCH_PRODUCT_SERVLET = "SearchProductServlet";
     public static final String ADD_TO_CART_SERVLET = "AddToCartServlet";
 //    public static final String VIEW_CART_SERVLET = "ViewCartServlet";
@@ -41,6 +37,7 @@ public class ConstantsKey {
     public static final String CREATE_CATEGORY_SERVLET = "CategoryCreateServlet";
     public static final String CHECK_OUT_SERVLET = "CheckOutServlet";
 
+    //Pages
     public static final String WELCOME_PAGE = "welcome.jsp";
     public static final String ERROR_PAGE = "error.jsp";
     public static final String PRODUCT_LIST_PAGE = "productlist.jsp";
@@ -50,11 +47,5 @@ public class ConstantsKey {
     public static final String UPDATE_PRODUCT_PAGE = "updateproduct.jsp";
     public static final String CHECK_OUT_PAGE = "checkout.jsp";
     public static final String CREATE_PRODUCT_PAGE = "createproduct.jsp";
-    //aaaaaa
-   
 
-    
-//    public static final String TRACE_ORDER_PAGE = "traceorder.jsp";
-//    public static final String CREATE_ACCOUNT_PAGE = "createaccount.jsp";
-//    public static final String TRACK_ORDER_CONTROLLER = "traceOrder";
 }
