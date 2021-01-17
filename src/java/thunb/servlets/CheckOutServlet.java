@@ -108,7 +108,6 @@ public class CheckOutServlet extends HttpServlet {
                                     if (decreaseStock) {
                                         request.setAttribute("CHECKOUT_SUCCESS", newOrderID);
                                         session.removeAttribute("CART");
-
                                     } 
                                 }
                             }

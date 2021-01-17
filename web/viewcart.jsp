@@ -102,6 +102,8 @@
                         </div>
                     </c:if>
 
+                    <c:set var="CHECK_AND_LOAD" value="${true}" scope="session"/>
+
                     <c:if test="${empty sessionScope.CART.items}">
                         <h3 class="text-center text-muted">Your Cart is empty
                             <form action="DispatchServlet?Action=LoadData">

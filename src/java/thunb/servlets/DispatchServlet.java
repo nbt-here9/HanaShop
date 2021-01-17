@@ -55,7 +55,8 @@ public class DispatchServlet extends HttpServlet {
 
                 if ("LoadData".equals(action)) {
                     url = ConstantsKey.LOAD_DATA_SERVLET;
-                } else if ("".equals(url)) {
+                } else if ("CheckAndLoad".equals(action)) {
+                    url = ConstantsKey.LOAD_FOR_CHECKOUT_SERVLET;
                 } //All user action
                 if ("Sign in".equals(action)) { //OKAYYY
                     url = ConstantsKey.LOGIN_PAGE;

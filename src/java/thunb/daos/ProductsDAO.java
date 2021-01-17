@@ -226,54 +226,6 @@ public class ProductsDAO implements Serializable {
         return false;
     }
 
-//    public int loadProduct(int page, boolean getAll)
-//            throws SQLException, NamingException {
-//        int total = 0;
-//        try {
-//            cn = DBHelpers.makeConnection();
-//            if (cn != null) {
-//                String sql;
-//                String productActive = " ";
-//                if (!getAll) {
-//                    productActive = "WHERE statusID = 1 AND quantity > 0 ";
-//                }
-//
-//                sql = "SELECT productID, productName, image, description, "
-//                        + "price, quantity, createDate, categoryID "
-//                        + "FROM Products "
-//                        + productActive
-//                        + "ORDER BY createDate DESC "
-//                        + "OFFSET ? ROWS "
-//                        + "FETCH NEXT ? ROWS ONLY ";
-//
-//                pst = cn.prepareStatement(sql);
-//                pst.setInt(1, page - 1);
-//                pst.setInt(2, ConstantsKey.PRODUCT_PER_PAGE);
-//                rs = pst.executeQuery();
-//                while (rs.next()) {
-//                    if (this.productList == null) {
-//                        this.productList = new ArrayList<>();
-//                    }
-//                    int productID = rs.getInt("productID");
-//                    String productName = rs.getNString("productName");
-//                    String image = rs.getString("image");
-//                    String description = rs.getNString("description");
-//                    int price = rs.getInt("price");
-//                    int quantity = rs.getInt("quantity");
-//                    Timestamp createDate = rs.getTimestamp("createDate");
-//                    int categoryID = rs.getInt("categoryID");
-//                    int statusID = rs.getInt("statusID");
-//                    this.productList.add(new ProductsDTO(productID, productName,
-//                            image, description, price, quantity, categoryID,
-//                            createDate, statusID));
-//                    total++;
-//                }
-//            }
-//        } finally {
-//            closeConnection();
-//        }
-//        return total;
-//    }
     public int searchProduct(String searchValue, int minPrice, int maxPrice,
             String incategoryID, int page, boolean getAll)
             throws SQLException, NamingException {

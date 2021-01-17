@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import thunb.cart.CartItemObject;
 import thunb.cart.CartObject;
-import thunb.daos.PaymentMethodsDAO;
 import thunb.daos.ProductsDAO;
 import thunb.dtos.UsersDTO;
 import thunb.errors.CartErrors;
@@ -53,47 +52,50 @@ public class LoadForCheckOutServlet extends HttpServlet {
                 if (loginUser != null && loginUser.getRoleID() == 1) {
                     isNotAdmin = false;
                 }
-                
-                boolean loadPrice = (boolean) session.getAttribute("LOAD_PRICE");
+
+                boolean checkAndLoad = (boolean) session.getAttribute("CHECK_AND_LOAD");
                 //Except admin
                 if (!isNotAdmin) {
                     request.setAttribute("ERR_MESS", "You can not access this function!!!");
                 } else {
+                    if (checkAndLoad) {
+                        CartObject cart = (CartObject) session.getAttribute("CART");
+                        if (cart != null && cart.getItems() != null && !cart.getItems().isEmpty()) {
 
-                    CartObject cart = (CartObject) session.getAttribute("CART");
-                    if (cart != null && cart.getItems() != null && !cart.getItems().isEmpty()) {
-
-                        //Cart Item Price Update
-                        ProductsDAO dao = new ProductsDAO();
-                        for (Map.Entry<Integer, CartItemObject> en : cart.getItems().entrySet()) {
-                            int newPrice = dao.getPriceByID(en.getKey());
-                            if (newPrice >= 0) {
-                                en.getValue().setPrice(newPrice);
-                            } else {
-                                cart.updateCart(en.getKey(), 0);
+                            //Cart Item Price Update
+                            ProductsDAO dao = new ProductsDAO();
+                            for (Map.Entry<Integer, CartItemObject> en : cart.getItems().entrySet()) {
+                                int newPrice = dao.getPriceByID(en.getKey());
+                                if (newPrice >= 0) {
+                                    en.getValue().setPrice(newPrice);
+                                } else {
+                                    cart.updateCart(en.getKey(), 0);
+                                }
                             }
-                        }
 
-                        // Check Stock Quantity
-                        boolean flag = true;
-                        Map<Integer, CartItemObject> items = cart.getItems();
-                        for (Map.Entry<Integer, CartItemObject> entry : items.entrySet()) {
-                            Integer key = entry.getKey();
-                            CartItemObject value = entry.getValue();
-                            int quantity = dao.getQuantityByID(key);
-                            if (quantity < value.getQuantity()) {
-                                CartErrors err = new CartErrors();
-                                err.setProductID(key);
-                                err.setQuantityLeft(quantity);
-                                err.setOutOfStockErr(entry.getValue().getItemName() + "is not Enough Quantity In Stock");
-                                request.setAttribute("ERROR", err);
-                                flag = false;
-                                break;
+                            // Check Stock Quantity
+                            boolean flag = true;
+                            Map<Integer, CartItemObject> items = cart.getItems();
+                            for (Map.Entry<Integer, CartItemObject> entry : items.entrySet()) {
+                                Integer key = entry.getKey();
+                                CartItemObject value = entry.getValue();
+                                int quantity = dao.getQuantityByID(key);
+                                if (quantity < value.getQuantity()) {
+                                    CartErrors err = new CartErrors();
+                                    err.setProductID(key);
+                                    err.setQuantityLeft(quantity);
+                                    if (quantity < 0) {
+                                        err.setStatusChangedErr(entry.getValue().getItemName() + " is deleted!");
+                                    }
+                                    err.setOutOfStockErr(entry.getValue().getItemName()
+                                            + " is not Enough Quantity In Stock! Only " + quantity + " products left!");
+                                    request.setAttribute("ERROR", err);
+                                    flag = false;
+                                    break;
+                                }
                             }
-                        }
-                        
-                        
-                        //Load Payment
+
+                            //Load Payment
 //                        PaymentMethodsDAO paymentMethodDAO = new PaymentMethodsDAO();
 //                        int total = paymentMethodDAO.getPaymentMethodsList();
 //                        if (total > 0) {
@@ -108,12 +110,29 @@ public class LoadForCheckOutServlet extends HttpServlet {
 //                        } else {
 //                            url = ConstantsKey.VIEW_CART_PAGE;
 //                        }
+                        }
+                        String action = request.getParameter("CartAction");
+                        if (action != null) {
+                            if (action.equals("Check out")) {
+                                url = "DispatchServlet"
+                                        + "?Action=" + action;
+                            } else if (action.equals("Proceed")) {
+                                String txtName = request.getParameter("txtName");
+                                String txtAddress = request.getParameter("txtAddress");
+                                String txtPhone = request.getParameter("txtPhone");
+                                url = "DispatchServlet"
+                                        + "?Action=Proceed"
+                                        + "&txtName=" + txtName
+                                        + "&txtAddress=" + txtAddress
+                                        + "&txtPhone=" + txtPhone;
+
+                            }
+                        }
+
+                        session.setAttribute("CHECK_AND_LOAD", false);
 
                     }
                 }
-
-                session.setAttribute("LOAD", false);
-                session.setAttribute("LOAD_CATEGORY_AND_STATUS", false);
             }
 
         } catch (SQLException ex) {
