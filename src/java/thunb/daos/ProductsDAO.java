@@ -274,7 +274,6 @@ public class ProductsDAO implements Serializable {
 //        }
 //        return total;
 //    }
-
     public int searchProduct(String searchValue, int minPrice, int maxPrice,
             String incategoryID, int page, boolean getAll)
             throws SQLException, NamingException {
@@ -287,26 +286,26 @@ public class ProductsDAO implements Serializable {
                     productActive = " AND statusID = 1 ";
                 }
 //                if (!getAll) {
-                    String sql = "SELECT productID, productName, image, "
-                            + "description, price, quantity, createDate, "
-                            + "categoryID, statusID "
-                            + "FROM Products "
-                            + "WHERE (productName LIKE ? OR description LIKE ?) "
-                            + "AND price >= ? AND price <= ? "
-                            + "AND categoryID LIKE ? "
-                            + productActive
-                            + "AND quantity > 0 "
-                            + "ORDER BY createDate DESC "
-                            + "OFFSET ? ROWS "
-                            + "FETCH NEXT ? ROWS ONLY";
-                    pst = cn.prepareStatement(sql);
-                    pst.setNString(1, "%" + searchValue + "%");
-                    pst.setNString(2, "%" + searchValue + "%");
-                    pst.setInt(3, minPrice);
-                    pst.setInt(4, maxPrice);
-                    pst.setString(5, incategoryID);
-                    pst.setInt(6, (page - 1) * ConstantsKey.PRODUCT_PER_PAGE);
-                    pst.setInt(7, ConstantsKey.PRODUCT_PER_PAGE);
+                String sql = "SELECT productID, productName, image, "
+                        + "description, price, quantity, createDate, "
+                        + "categoryID, statusID "
+                        + "FROM Products "
+                        + "WHERE (productName LIKE ? OR description LIKE ?) "
+                        + "AND price >= ? AND price <= ? "
+                        + "AND categoryID LIKE ? "
+                        + productActive
+                        + "AND quantity > 0 "
+                        + "ORDER BY createDate DESC "
+                        + "OFFSET ? ROWS "
+                        + "FETCH NEXT ? ROWS ONLY";
+                pst = cn.prepareStatement(sql);
+                pst.setNString(1, "%" + searchValue + "%");
+                pst.setNString(2, "%" + searchValue + "%");
+                pst.setInt(3, minPrice);
+                pst.setInt(4, maxPrice);
+                pst.setString(5, incategoryID);
+                pst.setInt(6, (page - 1) * ConstantsKey.PRODUCT_PER_PAGE);
+                pst.setInt(7, ConstantsKey.PRODUCT_PER_PAGE);
 //                } else { 
 //                    String sql = "SELECT productID, productName, image, description, price, quantity, createDate, categoryID, statusID "
 //                            + "FROM Products "
@@ -350,7 +349,7 @@ public class ProductsDAO implements Serializable {
         return total;
     }
 
-    public boolean createProduct(String productName, String image, 
+    public boolean createProduct(String productName, String image,
             String description, int price, int quantity, Timestamp createDate, int categoryID) throws SQLException, NamingException {
         try {
             cn = DBHelpers.makeConnection();
@@ -407,53 +406,79 @@ public class ProductsDAO implements Serializable {
         }
         return false;
     }
-    
-    public int getLatestProductID() throws SQLException, NamingException{
-        try{
-            cn=DBHelpers.makeConnection();
-            if(cn!=null){
+
+    public boolean updateStatusProduct(int productID, int statusID) throws SQLException, NamingException {
+        try {
+            cn = DBHelpers.makeConnection();
+            if (cn != null) {
+                String sql = "UPDATE Products SET statusID = ? "
+                        + "WHERE productID = ? ";
+                pst = cn.prepareStatement(sql);
+
+                pst.setInt(1, statusID);
+                pst.setInt(2, productID);
+                int result = pst.executeUpdate();
+                if (result > 0) {
+                    return true;
+                }
+            }
+        } finally {
+            closeConnection();
+        }
+        return false;
+    }
+
+    public int getLatestProductID() throws SQLException, NamingException {
+        try {
+            cn = DBHelpers.makeConnection();
+            if (cn != null) {
                 String sql = "select MAX(productID) as latestProductID from Products";
                 pst = cn.prepareStatement(sql);
                 rs = pst.executeQuery();
-                if(rs.next())return rs.getInt("latestProductID");
+                if (rs.next()) {
+                    return rs.getInt("latestProductID");
+                }
             }
-        }finally{
+        } finally {
             closeConnection();
         }
         return -1;
     }
 
-    public boolean decreaseQuantityByID(List<OrderDetailsDTO> items) 
-            throws SQLException, NamingException{
-        try{
+    public boolean decreaseQuantityByID(List<OrderDetailsDTO> items)
+            throws SQLException, NamingException {
+        try {
             cn = DBHelpers.makeConnection();
-            if(cn!=null){
+            if (cn != null) {
                 cn.setAutoCommit(false);
                 String sql = "update Products set quantity=quantity-? where productID=?";
                 pst = cn.prepareStatement(sql);
-                for(OrderDetailsDTO detail: items){
+                for (OrderDetailsDTO detail : items) {
                     pst.setInt(1, detail.getQuantity());
                     pst.setInt(2, detail.getProductID());
                     pst.addBatch();
                     pst.clearParameters();
                 }
                 int[] executeBatch = pst.executeBatch();
-                for(int i : executeBatch){
-                    if(i==PreparedStatement.EXECUTE_FAILED)return false;
+                for (int i : executeBatch) {
+                    if (i == PreparedStatement.EXECUTE_FAILED) {
+                        return false;
+                    }
                 }
                 cn.commit();
                 return true;
             }
-        }finally{
+        } finally {
             closeConnection();
         }
         return false;
     }
-    public boolean decreaseQuantityByID(Map<Integer,CartItemObject> items) 
-            throws SQLException, NamingException{
-        try{
+
+    public boolean decreaseQuantityByID(Map<Integer, CartItemObject> items)
+            throws SQLException, NamingException {
+        try {
             cn = DBHelpers.makeConnection();
-            if(cn!=null){
+            if (cn != null) {
                 cn.setAutoCommit(false);
                 String sql = "update Products set quantity=quantity-? where productID=?";
                 pst = cn.prepareStatement(sql);
@@ -464,16 +489,18 @@ public class ProductsDAO implements Serializable {
                     pst.clearParameters();
                 }
                 int[] executeBatch = pst.executeBatch();
-                for(int i : executeBatch){
-                    if(i==PreparedStatement.EXECUTE_FAILED)return false;
+                for (int i : executeBatch) {
+                    if (i == PreparedStatement.EXECUTE_FAILED) {
+                        return false;
+                    }
                 }
                 cn.commit();
                 return true;
             }
-        }finally{
+        } finally {
             closeConnection();
         }
         return false;
     }
-    
+
 }

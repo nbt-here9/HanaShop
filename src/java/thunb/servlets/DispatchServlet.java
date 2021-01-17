@@ -83,7 +83,10 @@ public class DispatchServlet extends HttpServlet {
                     url = ConstantsKey.CREATE_PRODUCT_PAGE;
                 } else if ("Create Category".equals(action)) {
                     url = ConstantsKey.CREATE_CATEGORY_SERVLET;
+                } else if ("Remove".equals(action)) {
+                    url = ConstantsKey.UPDATE_STATUS_PRODUCT_SERVLET;
                 }
+                
 
             }
 

@@ -69,7 +69,7 @@ public class UpdateProductServlet extends HttpServlet {
             HttpSession session = request.getSession(false);
             if (session != null) {
                 UsersDTO loginUser = (UsersDTO) session.getAttribute("LOGIN_USER");
-                if (loginUser != null) {
+                if (loginUser != null && loginUser.getRoleID() == ConstantsKey.ADMIN_ROLE) {
                     InputStream is = null;
                     List items;
                     FileItemFactory factory = new DiskFileItemFactory();

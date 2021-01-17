@@ -36,6 +36,7 @@ public class ConstantsKey {
     public static final String LOAD_DATA_SERVLET = "LoadDataServlet";
     public static final String CREATE_CATEGORY_SERVLET = "CategoryCreateServlet";
     public static final String CHECK_OUT_SERVLET = "CheckOutServlet";
+    public static final String UPDATE_STATUS_PRODUCT_SERVLET = "UpdateStatusProductServlet";
 
     //Pages
     public static final String WELCOME_PAGE = "welcome.jsp";

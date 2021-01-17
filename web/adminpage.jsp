@@ -12,6 +12,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Admin</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
         <link rel="stylesheet" type="text/css" href="resources/css/jquery-ui.css">
         <link rel="stylesheet" type="text/css" href="resources/css/productslist.css">
     </head>
@@ -21,16 +22,12 @@
         </c:if>
         <jsp:include page="WEB-INF/header/header.jsp" flush="true"/>
 
+        <c:if test="${not empty requestScope.REMOVE_SUCCESS}">
+            <div class="alert alert-success alert-dismissible mt-3 mb-3 ml-3 mr-3">${requestScope.REMOVE_SUCCESS}</div>
+        </c:if>
 
         <c:if test="${sessionScope.LOGIN_USER.roleID eq 1}">
             <h1 class="text-center text-muted">Product Management</h1>
-
-            <!--        <form class="text-center" action="AdminDispatchServlet" method="POST">
-                        <h3> Search Product </h3>
-                        <input style="width: 400px" class="mb-3" type="text" name="txtSearchValue" value="${param.txtSearchValue}"/><br/>
-                        <input class="btn btn-info" type="submit" name="Action" value="Search"/>
-                        <input class="btn btn-warning" type="submit" name="Action" value="Create Product" />
-                    </form>-->
 
             <form style="width: 500px; margin: 0 auto" action="DispatchServlet?Action=LoadData" method="POST" class="text-center"> 
 
@@ -79,6 +76,7 @@
                         <tbody>
 
                             <c:forEach var="product" items="${requestScope.PRODUCT_LIST}">
+                            <form action="DispatchServlet" id="RemoveProduct" method="POST"></form>
                             <form action="DispatchServlet" method="POST">
                                 <tr>
                                     <td>${product.productName}</td>
@@ -91,11 +89,32 @@
                                         </c:if>
                                     </td>
                                     <td>${product.createDate}</td>
-                                    <td>${product.statusID}</td>  
                                     <td>
+                                        <c:if test="${product.statusID eq 1}">Active</c:if>
+                                        <c:if test="${product.statusID eq 0}">Inactive</c:if>
+                                        </td>  
+                                    <%--       <td>
+                                               <input type="hidden" name="txtProductID" value="${product.productID}" />
+                                               <input class="btn btn-info" type="submit" value="Edit" name="Action" />
+                                           </td>  
+                                    --%>
+                                    <td class="td-actions text-right">
                                         <input type="hidden" name="txtProductID" value="${product.productID}" />
-                                        <input class="btn btn-info" type="submit" value="Edit" name="Action" />
-                                    </td>  
+                                        <button type="submit" class="btn btn-info btn-just-icon btn-sm" 
+                                                data-original-title="Update"  title="Update" name="Action" value="Edit">
+                                            <i class="material-icons">edit</i>
+                                        </button>
+
+                                        <c:if test="${product.statusID eq 1}">
+                                            <input type="hidden" name="txtProductID" value="${product.productID}" form="RemoveProduct"/>
+                                            <button type="submit" onclick="return confirm('Are you sure to remove this product ?')" 
+                                                    form="RemoveProduct"
+                                                    class="btn btn-danger btn-just-icon btn-sm" data-original-title="Remove" title="Remove" 
+                                                    name="Action" value="Remove">
+                                                <i class="material-icons">close</i>
+                                            </button>
+                                        </c:if>
+                                    </td>
                                 </tr>
                             </form>
                         </c:forEach>
