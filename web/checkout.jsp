@@ -18,7 +18,7 @@
         <c:if test="${sessionScope.CHECK_AND_LOAD}">
             <c:url var="urlRewriting" value="DispatchServlet">
                 <c:param name="Action" value="CheckAndLoad"/>
-                <c:param name="CartAction" value="Check out"/>
+                <c:param name="CartAction" value="${param.Action}"/>
             </c:url>
             <c:redirect url="${pageScope.urlRewriting}"/>
         </c:if>
@@ -27,6 +27,7 @@
 
         <c:if test="${not empty requestScope.CHECKOUT_SUCCESS}">
             <div class="alert alert-success alert-dismissible mt-3 mb-3 ml-3 mr-3">
+                <c:set var="CART" value="${null}" scope="session"/>
                 Your Order Have Been Succesfully Process. Your OrderID is: ${requestScope.CHECKOUT_SUCCESS}
             </div>
             <h3 class="text-center text-muted">
@@ -42,19 +43,19 @@
 
         <c:if test="${not empty requestScope.ERROR}">
             <c:if test="${not empty requestScope.ERROR.statusChangedErr}">
-            <div class="alert alert-danger alert-dismissible mt-3 mb-3 ml-3 mr-3">${requestScope.ERROR.statusChangedErr}</div>
+                <div class="alert alert-danger alert-dismissible mt-3 mb-3 ml-3 mr-3">${requestScope.ERROR.statusChangedErr}</div>
             </c:if>
-            
+
             <c:if test="${not empty requestScope.ERROR.outOfStockErr}">
-            <div class="alert alert-danger alert-dismissible mt-3 mb-3 ml-3 mr-3">${requestScope.ERROR.outOfStockErr}</div>
+                <div class="alert alert-danger alert-dismissible mt-3 mb-3 ml-3 mr-3">${requestScope.ERROR.outOfStockErr}</div>
             </c:if>
-            
+
             <h3 class="text-center text-muted">
                 <a href="viewcart.jsp" class="btn btn-info">Update cart before check out again!</a>
             </h3>
         </c:if>
 
-
+        <c:set var="CHECK_AND_LOAD" value="${true}" scope="session"/>
 
         <c:if test="${empty requestScope.CHECKOUT_SUCCESS}">
             <c:if test="${empty requestScope.ERROR}">
@@ -62,7 +63,7 @@
                 <c:if test="${not empty sessionScope.CART}">
                     <section class="payment-form dark pt-4">
                         <div class="container">
-                            <form action="DispatchServlet?CheckAndLoad&CartAction=Proceed" method="POST">
+                            <form action="DispatchServlet?Action=CheckAndLoad&CartAction=Proceed" method="POST">
                                 <div class="products">
                                     <h3 class="title">Checkout</h3>
                                     <c:forEach var="item" items="${sessionScope.CART.items}" varStatus="counter">
@@ -120,7 +121,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-12">
-                                            <button type="submit" name="Action" value="Proceed" class="btn btn-info btn-block">Proceed</button>
+                                            <button type="submit" name="" value="Proceed" class="btn btn-info btn-block">Proceed</button>
                                         </div>
                                     </div>
                                 </div>
@@ -133,10 +134,7 @@
             </c:if>
         </c:if>
 
-        <c:if test="${empty sessionScope.CART}">
-            <c:redirect url="DispatchServlet"></c:redirect>
-        </c:if>
-
+   
 
     </body>
 </html>

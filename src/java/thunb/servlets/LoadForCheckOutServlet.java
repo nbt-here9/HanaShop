@@ -75,6 +75,8 @@ public class LoadForCheckOutServlet extends HttpServlet {
                                     productIDErr = en.getValue().getItemName();
                                     cart.updateCart(en.getKey(), 0);
                                     isDelete = true;
+                                    url = "DispatchServlet"
+                                            + "?Action=Check out";
                                 }
                             }
 
@@ -86,8 +88,9 @@ public class LoadForCheckOutServlet extends HttpServlet {
                                     Integer key = entry.getKey();
                                     CartItemObject value = entry.getValue();
                                     int quantity = dao.getQuantityByID(key);
-                                    
-                                    if (quantity > value.getQuantity()) {
+
+                                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAA" + quantity);
+                                    if (quantity < value.getQuantity()) {
                                         err = new CartErrors();
                                         err.setProductID(key);
                                         err.setQuantityLeft(quantity);
@@ -95,11 +98,17 @@ public class LoadForCheckOutServlet extends HttpServlet {
                                         err.setOutOfStockErr(entry.getValue().getItemName()
                                                 + " is not Enough Quantity In Stock! Only " + quantity + " products left!");
 
+                                        url = "DispatchServlet"
+                                                + "?Action=Check out";
+
                                         break;
                                     }
                                     if (quantity < 0) {
                                         err = new CartErrors();
                                         err.setStatusChangedErr(entry.getValue().getItemName() + " is deleted!");
+
+                                        url = "DispatchServlet"
+                                                + "?Action=Check out";
                                         break;
                                     }
                                 }
@@ -112,37 +121,29 @@ public class LoadForCheckOutServlet extends HttpServlet {
                                 err.setStatusChangedErr(productIDErr + " is deleted!");
                             }
 
-                            //Load Payment
-//                        PaymentMethodsDAO paymentMethodDAO = new PaymentMethodsDAO();
-//                        int total = paymentMethodDAO.getPaymentMethodsList();
-//                        if (total > 0) {
-//                            request.setAttribute("PAYMENT_LIST", paymentMethodDAO.getMethodList());
-//                        }
-//
-//                        if (flag) {
-//                            String action = (String) request.getAttribute("Action");
-//                            if (action != null) {
-//                                 url += "?Action=" + action;
-//                            }
-//                        } else {
-//                            url = ConstantsKey.VIEW_CART_PAGE;
-//                        }
+                        } else {
+                            url = "DispatchServlet"
+                                                + "?Action=Check out";
                         }
-                        String action = request.getParameter("CartAction");
-                        if (action != null) {
-                            if (action.equals("Check out")) {
-                                url = "DispatchServlet"
-                                        + "?Action=" + action;
-                            } else if (action.equals("Proceed")) {
-                                String txtName = request.getParameter("txtName");
-                                String txtAddress = request.getParameter("txtAddress");
-                                String txtPhone = request.getParameter("txtPhone");
-                                url = "DispatchServlet"
-                                        + "?Action=Proceed"
-                                        + "&txtName=" + txtName
-                                        + "&txtAddress=" + txtAddress
-                                        + "&txtPhone=" + txtPhone;
 
+                        if (url.equals(ConstantsKey.ERROR_PAGE)) {
+                            String action = request.getParameter("CartAction");
+                            System.out.println("BBBBBBbbbutttt: " + action);
+                            if (action != null) {
+                                if (action.equals("Check out")) {
+                                    url = "DispatchServlet"
+                                            + "?Action=Check out";
+                                } else if (action.equals("Proceed")) {
+
+                                    String txtName = request.getParameter("txtName");
+                                    String txtAddress = request.getParameter("txtAddress");
+                                    String txtPhone = request.getParameter("txtPhone");
+                                    url = "CheckOutServlet"
+                                            + "?txtName=" + txtName
+                                            + "&txtAddress=" + txtAddress
+                                            + "&txtPhone=" + txtPhone;
+
+                                }
                             }
                         }
 
@@ -150,7 +151,7 @@ public class LoadForCheckOutServlet extends HttpServlet {
                         if (err != null) {
                             request.setAttribute("ERROR", err);
                         }
-                         session.setAttribute("CART", cart);
+                        session.setAttribute("CART", cart);
                     }
                 }
             }

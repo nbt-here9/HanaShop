@@ -7,15 +7,25 @@ package thunb.dtos;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  *
  * @author Banh Bao
  */
-public class HistoryDTO implements Serializable {
-    private Timestamp orderDate;
-    private int paymentMethod;
-    private int quantity;
-    private long total;
+public class HistoryDTO extends OrdersDTO {
+    private List<OrderDetailsDTO> detailList;
+
+    public HistoryDTO() {
+    }
+
+    public HistoryDTO(List<OrderDetailsDTO> detailList, String orderID, String username, String customerName, String customerAddress, String customerPhone, Timestamp orderDate, int paymentMethod, int paymentStatus, long total) {
+        super(orderID, username, customerName, customerAddress, customerPhone, orderDate, paymentMethod, paymentStatus, total);
+        this.detailList = detailList;
+    }
+
+    public HistoryDTO(Object object, Object object0, String orderID, String username, String customerName, String customerAddress, String customerPhone, Timestamp orderDate, int paymentMethod, int paymentStatus, long total, Object object1) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

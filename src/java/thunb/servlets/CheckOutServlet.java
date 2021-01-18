@@ -23,6 +23,7 @@ import thunb.daos.OrderDetailsDAO;
 import thunb.daos.OrdersDAO;
 import thunb.daos.ProductsDAO;
 import thunb.dtos.UsersDTO;
+import thunb.errors.CartErrors;
 import thunb.errors.CheckOutErrors;
 import thunb.utilities.ConstantsKey;
 import thunb.utilities.Utilities;
@@ -49,11 +50,13 @@ public class CheckOutServlet extends HttpServlet {
         String url = ConstantsKey.CHECK_OUT_PAGE;
         boolean redirect = false;
         try {
+
             boolean valid = true;
             CheckOutErrors errors = new CheckOutErrors();
-            HttpSession session = ((HttpServletRequest) request).getSession(false);
+            HttpSession session = request.getSession(false);
             if (session != null) {
                 CartObject cart = (CartObject) session.getAttribute("CART");
+               
                 if (cart != null) {
                     String txtName = request.getParameter("txtName");
                     String txtAddress = request.getParameter("txtAddress");
@@ -93,7 +96,7 @@ public class CheckOutServlet extends HttpServlet {
                         ProductsDAO productsDAO = new ProductsDAO();
 
                         Timestamp orderDate = Utilities.getCurrentTime();
-                        boolean newOrder = ordersDAO.createOrder(newOrderID, loginUsername, txtName, txtAddress, 
+                        boolean newOrder = ordersDAO.createOrder(newOrderID, loginUsername, txtName, txtAddress,
                                 txtPhone, orderDate, cart.total(), paymentMethod);
                         if (newOrder) {
                             OrderDetailsDAO orderDetailsDAO = new OrderDetailsDAO();
@@ -101,21 +104,23 @@ public class CheckOutServlet extends HttpServlet {
                             boolean rs = orderDetailsDAO.addOrderDetails(newOrderID, items);
                             if (!rs) {
                                 request.setAttribute("CHECKOUT_FAILED", "FAILED");
-                                //delete order
+//                                //delete order
                             } else {
                                 if (paymentMethod == ConstantsKey.COD) {
                                     boolean decreaseStock = productsDAO.decreaseQuantityByID(items);
                                     if (decreaseStock) {
                                         request.setAttribute("CHECKOUT_SUCCESS", newOrderID);
-                                        session.removeAttribute("CART");
-                                    } 
+                                       // session.removeAttribute("CART");
+                                    }
                                 }
                             }
                         }
 //                        }
                     }
                 }
+              session.setAttribute("CHECK_AND_LOAD", false);
             }
+
         } catch (NumberFormatException ex) {
             log("CheckOutServlet_NumberFormatException:" + ex.getMessage());
         } catch (SQLException ex) {
