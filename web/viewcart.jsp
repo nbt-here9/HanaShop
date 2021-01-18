@@ -19,9 +19,6 @@
         <link rel="stylesheet" type="text/css" href="resources/css/viewcart.css">
     </head>
     <body>
-        <%--<c:if test="${sessionScope.LOAD_PRICE}">--%>
-        <%--<c:redirect url="DispatchServlet?Action=LoadData"/>--%>
-        <%--</c:if>--%>
 
         <jsp:include page="WEB-INF/header/header.jsp" flush="true"/>
 

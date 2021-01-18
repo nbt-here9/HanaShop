@@ -6,13 +6,18 @@
 package thunb.servlets;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import thunb.daos.UsersDAO;
 import thunb.dtos.GooglePojo;
+import thunb.dtos.UsersDTO;
 import thunb.utilities.ConstantsKey;
 import thunb.utilities.GoogleUtils;
 
@@ -36,18 +41,37 @@ public class LoginGoogleServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        String url = ConstantsKey.SIGN_UP_PAGE;
-        String code = request.getParameter("code");
-        if (code == null || code.isEmpty()) {
-            RequestDispatcher dis = request.getRequestDispatcher("login.jsp");
-            dis.forward(request, response);
-        } else {
-            String accessToken = GoogleUtils.getToken(code);
-            GooglePojo googlePojo = GoogleUtils.getUserInfo(accessToken);
-            request.setAttribute("id", googlePojo.getId());
-            request.setAttribute("name", googlePojo.getName());
-            request.setAttribute("email", googlePojo.getEmail());
-            
+        String url = ConstantsKey.LOGIN_PAGE;
+        try {
+            String code = request.getParameter("code");
+            if (code == null || code.isEmpty()) {
+                RequestDispatcher dis = request.getRequestDispatcher("login.jsp");
+                dis.forward(request, response);
+            } else {
+                String accessToken = GoogleUtils.getToken(code);
+                GooglePojo googlePojo = GoogleUtils.getUserInfo(accessToken);
+
+                String googleID = googlePojo.getId();
+                UsersDAO dao = new UsersDAO();
+                boolean rs = dao.checkLogin(googleID);
+
+                HttpSession session = request.getSession(false);
+                if (session == null) {
+                    session = request.getSession(true);
+                }
+                if (rs) {
+                    UsersDTO loginUser = dao.getLoginUser();
+                    session.setAttribute("LOGIN_USER", loginUser);
+                    url = ConstantsKey.LOAD_DATA_SERVLET;
+                    session.setAttribute("LOAD_ALL", true);
+                    session.setAttribute("LOAD_CATEGORY_AND_STATUS", true);
+                }
+            }
+        } catch (SQLException ex) {
+            log("LoginGoogleServlet_SQLException:" + ex.getMessage());
+        } catch (NamingException ex) {
+            log("LoginGoogleServlet_NamingException:" + ex.getMessage());
+        } finally {
             RequestDispatcher rd = request.getRequestDispatcher(url);
             rd.forward(request, response);
         }

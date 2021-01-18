@@ -72,4 +72,30 @@ public class UsersDAO {
         }
         return false;
     }
+
+   public boolean checkLogin(String googleID) throws SQLException, NamingException {
+        try{
+            cn = DBHelpers.makeConnection();
+            if(cn!=null){
+                String sql = "select username,googleID,name,address,phone,roleID " +
+                        "from Users " +
+                        "where googleID=?";
+                pst = cn.prepareStatement(sql);
+                pst.setString(1,googleID);
+                rs = pst.executeQuery();
+                if(rs.next()){
+                    String username = rs.getString("username");
+                    String name = rs.getNString("name");
+                    String address = rs.getNString("address");
+                    String phone = rs.getString("phone");
+                    int roleID = rs.getInt("roleID");
+                    this.loginUser = new UsersDTO(username, googleID, name, address, phone, roleID);
+                    return true;
+                }
+            }
+        }finally{
+            closeConnection();
+        }
+        return false;
+    }
 }

@@ -7,11 +7,13 @@ package thunb.dtos;
 
 import java.io.Serializable;
 
+
 /**
  *
  * @author Banh Bao
  */
 public class UsersDTO implements Serializable {
+
     private String username;
     private String password;
     private String googleID;
@@ -23,9 +25,20 @@ public class UsersDTO implements Serializable {
     public UsersDTO() {
     }
 
+   
+
     public UsersDTO(String username, String password, String googleID, String name, String address, String phone, int roleID) {
         this.username = username;
         this.password = password;
+        this.googleID = googleID;
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.roleID = roleID;
+    }
+    
+    public UsersDTO(String username, String googleID, String name, String address, String phone, int roleID) {
+        this.username = username;
         this.googleID = googleID;
         this.name = name;
         this.address = address;
@@ -130,7 +143,5 @@ public class UsersDTO implements Serializable {
     public void setRoleID(int roleID) {
         this.roleID = roleID;
     }
-    
-    
-   
+
 }
