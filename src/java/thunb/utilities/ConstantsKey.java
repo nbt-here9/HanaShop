@@ -11,6 +11,15 @@ package thunb.utilities;
  */
 public class ConstantsKey {
 
+    //Google
+     public static String GOOGLE_CLIENT_ID = "596654673778-ie4v7opm6tudd91qv6pmfnnqvmp8fhov.apps.googleusercontent.com";
+  public static String GOOGLE_CLIENT_SECRET = "ypPJw12uC_VBOJpzWluATcEW";
+  public static String GOOGLE_REDIRECT_URI = "http://localhost:8084/SE140803_HanaShop/LoginGoogleServlet";
+  public static String GOOGLE_LINK_GET_TOKEN = "https://accounts.google.com/o/oauth2/token";
+  public static String GOOGLE_LINK_GET_USER_INFO = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=";
+  public static String GOOGLE_GRANT_TYPE = "authorization_code";
+    
+    
     //Properties
     public static final int ADMIN_ROLE = 1;
     public static final int USER_ROLE = 0;
@@ -37,6 +46,8 @@ public class ConstantsKey {
     public static final String CREATE_CATEGORY_SERVLET = "CategoryCreateServlet";
     public static final String CHECK_OUT_SERVLET = "CheckOutServlet";
     public static final String UPDATE_STATUS_PRODUCT_SERVLET = "UpdateStatusProductServlet";
+    public static final String LOGIN_GOOGLE_SERVLET = "LoginGoogleServlet";
+    public static final String VIEW_HISTORY_SERVLET = "ViewHistoryServlet";
 
     //Pages
     public static final String WELCOME_PAGE = "welcome.jsp";
@@ -48,5 +59,7 @@ public class ConstantsKey {
     public static final String UPDATE_PRODUCT_PAGE = "updateproduct.jsp";
     public static final String CHECK_OUT_PAGE = "checkout.jsp";
     public static final String CREATE_PRODUCT_PAGE = "createproduct.jsp";
+    public static final String SIGN_UP_PAGE = "signup.jsp";
+    public static final String HISTORY_PAGE = "history.jsp";
 
 }

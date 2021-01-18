@@ -10,7 +10,6 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Login</title>
-        <link rel="stylesheet" href="resources/css/bootstrap.min.css"/>
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="resources/css/login.css">
     </head>
@@ -45,6 +44,9 @@
                                         <div class="d-flex justify-content-between">
                                             <div id="my-signin2" class="mr-auto ml-auto"></div>
                                         </div>
+
+                                        <a class="loginBtn loginBtn--google" href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8084/SE140803_HanaShop/LoginGoogleServlet&response_type=code
+                                           &client_id=596654673778-ie4v7opm6tudd91qv6pmfnnqvmp8fhov.apps.googleusercontent.com&approval_prompt=force">Login With Google</a> 
                                     </form>
 
                                 </div>

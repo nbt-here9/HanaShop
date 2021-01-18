@@ -18,7 +18,7 @@
         <c:if test="${sessionScope.CHECK_AND_LOAD}">
             <c:url var="urlRewriting" value="DispatchServlet">
                 <c:param name="Action" value="CheckAndLoad"/>
-                <c:param name="CartAction" value="${param.Action}"/>
+                <c:param name="CartAction" value="Check out"/>
             </c:url>
             <c:redirect url="${pageScope.urlRewriting}"/>
         </c:if>

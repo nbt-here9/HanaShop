@@ -44,6 +44,9 @@ public class LoadForCheckOutServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         String url = ConstantsKey.ERROR_PAGE;
+        boolean isDelete = false;
+        CartErrors err = null;
+        String productIDErr = "";
         try {
             boolean isNotAdmin = true;
             HttpSession session = ((HttpServletRequest) request).getSession(false);
@@ -69,30 +72,44 @@ public class LoadForCheckOutServlet extends HttpServlet {
                                 if (newPrice >= 0) {
                                     en.getValue().setPrice(newPrice);
                                 } else {
+                                    productIDErr = en.getValue().getItemName();
                                     cart.updateCart(en.getKey(), 0);
+                                    isDelete = true;
                                 }
                             }
 
-                            // Check Stock Quantity
-                            boolean flag = true;
-                            Map<Integer, CartItemObject> items = cart.getItems();
-                            for (Map.Entry<Integer, CartItemObject> entry : items.entrySet()) {
-                                Integer key = entry.getKey();
-                                CartItemObject value = entry.getValue();
-                                int quantity = dao.getQuantityByID(key);
-                                if (quantity < value.getQuantity()) {
-                                    CartErrors err = new CartErrors();
-                                    err.setProductID(key);
-                                    err.setQuantityLeft(quantity);
-                                    if (quantity < 0) {
-                                        err.setStatusChangedErr(entry.getValue().getItemName() + " is deleted!");
+                            if (cart.getItems() != null && !cart.getItems().isEmpty()) {
+                                // Check Stock Quantity
+
+                                Map<Integer, CartItemObject> items = cart.getItems();
+                                for (Map.Entry<Integer, CartItemObject> entry : items.entrySet()) {
+                                    Integer key = entry.getKey();
+                                    CartItemObject value = entry.getValue();
+                                    int quantity = dao.getQuantityByID(key);
+                                    
+                                    if (quantity > value.getQuantity()) {
+                                        err = new CartErrors();
+                                        err.setProductID(key);
+                                        err.setQuantityLeft(quantity);
+
+                                        err.setOutOfStockErr(entry.getValue().getItemName()
+                                                + " is not Enough Quantity In Stock! Only " + quantity + " products left!");
+
+                                        break;
                                     }
-                                    err.setOutOfStockErr(entry.getValue().getItemName()
-                                            + " is not Enough Quantity In Stock! Only " + quantity + " products left!");
-                                    request.setAttribute("ERROR", err);
-                                    flag = false;
-                                    break;
+                                    if (quantity < 0) {
+                                        err = new CartErrors();
+                                        err.setStatusChangedErr(entry.getValue().getItemName() + " is deleted!");
+                                        break;
+                                    }
                                 }
+                            }
+
+                            if (isDelete) {
+                                if (err == null) {
+                                    err = new CartErrors();
+                                }
+                                err.setStatusChangedErr(productIDErr + " is deleted!");
                             }
 
                             //Load Payment
@@ -130,7 +147,10 @@ public class LoadForCheckOutServlet extends HttpServlet {
                         }
 
                         session.setAttribute("CHECK_AND_LOAD", false);
-
+                        if (err != null) {
+                            request.setAttribute("ERROR", err);
+                        }
+                         session.setAttribute("CART", cart);
                     }
                 }
             }

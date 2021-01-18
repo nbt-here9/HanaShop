@@ -40,25 +40,27 @@
                             </li>
                     </c:if>
 
-                    <%--
+                    
                     <c:if test="${sessionScope.LOGIN_USER.roleID eq 0}">
-                        <li class="nav-item <c:if test="${requestScope.NEXT_PAGE=='traceorder.jsp'}">active</c:if>">
+                        <li class="nav-item <c:if test="${requestScope.NEXT_PAGE=='history.jsp'}">active</c:if>">
                                 <a class="nav-link">
-                                    <input class="btn btn-outline-light" type="submit" value="Check Your Order" name="Action" />
+                                    <input class="btn btn-outline-light" type="submit" value="History" name="Action" />
                                 </a>
                             </li>
                     </c:if>
-                    --%>
+                    
 
                 </ul>
                 <span class="navbar-text">
                     <ul class="navbar-nav mr-auto">
                         <c:if test="${empty sessionScope.LOGIN_USER}">
+                             <%--
                             <li class="nav-item <c:if test="${requestScope.NEXT_PAGE=='createaccount.jsp'}">active</c:if>">
                                     <a class="nav-link">
                                         <input class="btn btn-outline-light" type="submit" value="Sign up" name="Action" />
                                     </a>
                                 </li>
+                                --%>
                                 <li class="nav-item <c:if test="${requestScope.NEXT_PAGE=='login.jsp'}">active</c:if>">
                                     <a class="nav-link">
                                         <input class="btn btn-outline-light" type="submit" value="Sign in" name="Action" />

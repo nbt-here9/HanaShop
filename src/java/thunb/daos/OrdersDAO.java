@@ -70,21 +70,8 @@ public class OrdersDAO {
     
 //    
     
-    public boolean updatePaymentStatus(String orderID,int paymentStatus) throws NamingException, SQLException{
-        try{
-            cn = DBHelpers.makeConnection();
-            if(cn!=null){
-                String sql = "update Orders set paymentStatus=? where orderID=?";
-                pst = cn.prepareStatement(sql);
-                pst.setInt(1, paymentStatus);
-                pst.setString(2, orderID);                
-                int result = pst.executeUpdate();
-                if(result>0)return true;
-            }
-        }finally{
-            closeConnection();
-        }
-        return false;
-    }
+    
+    
+    
     
 }
