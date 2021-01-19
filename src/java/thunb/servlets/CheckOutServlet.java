@@ -56,7 +56,7 @@ public class CheckOutServlet extends HttpServlet {
             HttpSession session = request.getSession(false);
             if (session != null) {
                 CartObject cart = (CartObject) session.getAttribute("CART");
-               
+
                 if (cart != null) {
                     String txtName = request.getParameter("txtName");
                     String txtAddress = request.getParameter("txtAddress");
@@ -83,8 +83,6 @@ public class CheckOutServlet extends HttpServlet {
 //                        String txtPaymentMethod = request.getParameter("txtPaymentMethod");
 //                        if (txtPaymentMethod != null && !txtPaymentMethod.trim().isEmpty() && txtPaymentMethod.matches("\\d+")) {
 //                            int paymentMethod = Integer.parseInt(txtPaymentMethod);
-                        int paymentMethod = ConstantsKey.COD;
-                        String newOrderID = Utilities.OrderIDGenerate();
 
                         UsersDTO loginUser = (UsersDTO) session.getAttribute("LOGIN_USER");
                         String loginUsername = null;
@@ -94,8 +92,11 @@ public class CheckOutServlet extends HttpServlet {
 
                         OrdersDAO ordersDAO = new OrdersDAO();
                         ProductsDAO productsDAO = new ProductsDAO();
-
+                        
+                        int paymentMethod = ConstantsKey.COD;
+                        String newOrderID = Utilities.OrderIDGenerate();
                         Timestamp orderDate = Utilities.getCurrentTime();
+                        
                         boolean newOrder = ordersDAO.createOrder(newOrderID, loginUsername, txtName, txtAddress,
                                 txtPhone, orderDate, cart.total(), paymentMethod);
                         if (newOrder) {
@@ -110,7 +111,7 @@ public class CheckOutServlet extends HttpServlet {
                                     boolean decreaseStock = productsDAO.decreaseQuantityByID(items);
                                     if (decreaseStock) {
                                         request.setAttribute("CHECKOUT_SUCCESS", newOrderID);
-                                       // session.removeAttribute("CART");
+                                        // session.removeAttribute("CART");
                                     }
                                 }
                             }
@@ -118,7 +119,7 @@ public class CheckOutServlet extends HttpServlet {
 //                        }
                     }
                 }
-              session.setAttribute("CHECK_AND_LOAD", false);
+                session.setAttribute("CHECK_AND_LOAD", false);
             }
 
         } catch (NumberFormatException ex) {

@@ -19,6 +19,11 @@
 
         <c:if test="${sessionScope.LOGIN_USER.roleID eq 0}">
 
+            <c:if test="${(requestScope.NO_RESULT) && ( (not empty param.txtFromDate && not empty param.txtToDate) || (not empty param.txtSearchValue) )}">
+                <div class="text-center text-muted">
+                    <font style="color: red">No result matched this search value!</font><br/>
+                </div>
+            </c:if>
             <c:if test="${not empty sessionScope.HISTORY}">
                 <h1 class="text-center text-muted">Your Shopping history</h1><br>
 
