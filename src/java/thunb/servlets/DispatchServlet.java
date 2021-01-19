@@ -79,7 +79,7 @@ public class DispatchServlet extends HttpServlet {
                     url = ConstantsKey.CHECK_OUT_SERVLET;
                 }
                 else if ("History".equals(action)) {
-                    url = ConstantsKey.HISTORY_PAGE;
+                    url = ConstantsKey.VIEW_HISTORY_SERVLET;
                 } //Admin action
                 else if ("Edit".equals(action)) {
                     url = ConstantsKey.LOAD_PRODUCT_SERVLET;

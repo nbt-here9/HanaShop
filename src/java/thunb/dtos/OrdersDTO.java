@@ -21,13 +21,12 @@ public class OrdersDTO implements Serializable {
     private String customerPhone;
     private Timestamp orderDate;
     private int paymentMethod;
-    private int paymentStatus;
     private long total;
 
     public OrdersDTO() {
     }
 
-    public OrdersDTO(String orderID, String username, String customerName, String customerAddress, String customerPhone, Timestamp orderDate, int paymentMethod, int paymentStatus, long total) {
+    public OrdersDTO(String orderID, String username, String customerName, String customerAddress, String customerPhone, Timestamp orderDate, int paymentMethod, long total) {
         this.orderID = orderID;
         this.username = username;
         this.customerName = customerName;
@@ -35,7 +34,6 @@ public class OrdersDTO implements Serializable {
         this.customerPhone = customerPhone;
         this.orderDate = orderDate;
         this.paymentMethod = paymentMethod;
-        this.paymentStatus = paymentStatus;
         this.total = total;
     }
 
@@ -135,20 +133,6 @@ public class OrdersDTO implements Serializable {
      */
     public void setPaymentMethod(int paymentMethod) {
         this.paymentMethod = paymentMethod;
-    }
-
-    /**
-     * @return the paymentStatus
-     */
-    public int getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    /**
-     * @param paymentStatus the paymentStatus to set
-     */
-    public void setPaymentStatus(int paymentStatus) {
-        this.paymentStatus = paymentStatus;
     }
 
     /**

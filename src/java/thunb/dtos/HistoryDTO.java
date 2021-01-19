@@ -5,7 +5,6 @@
  */
 package thunb.dtos;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -15,17 +14,46 @@ import java.util.List;
  */
 public class HistoryDTO extends OrdersDTO {
     private List<OrderDetailsDTO> detailList;
+    private List<String> productNameList;
 
     public HistoryDTO() {
     }
 
-    public HistoryDTO(List<OrderDetailsDTO> detailList, String orderID, String username, String customerName, String customerAddress, String customerPhone, Timestamp orderDate, int paymentMethod, int paymentStatus, long total) {
-        super(orderID, username, customerName, customerAddress, customerPhone, orderDate, paymentMethod, paymentStatus, total);
+    public HistoryDTO(List<OrderDetailsDTO> detailList, List<String> productNameList, String orderID, String username, String customerName, String customerAddress, String customerPhone, Timestamp orderDate, int paymentMethod, long total) {
+        super(orderID, username, customerName, customerAddress, customerPhone, orderDate, paymentMethod, total);
+        this.detailList = detailList;
+        this.productNameList = productNameList;
+    }
+
+    
+
+    /**
+     * @return the detailList
+     */
+    public List<OrderDetailsDTO> getDetailList() {
+        return detailList;
+    }
+
+    /**
+     * @param detailList the detailList to set
+     */
+    public void setDetailList(List<OrderDetailsDTO> detailList) {
         this.detailList = detailList;
     }
 
-    public HistoryDTO(Object object, Object object0, String orderID, String username, String customerName, String customerAddress, String customerPhone, Timestamp orderDate, int paymentMethod, int paymentStatus, long total, Object object1) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    /**
+     * @return the productNameList
+     */
+    public List<String> getProductNameList() {
+        return productNameList;
     }
+
+    /**
+     * @param productNameList the productNameList to set
+     */
+    public void setProductNameList(List<String> productNameList) {
+        this.productNameList = productNameList;
+    }
+
     
 }

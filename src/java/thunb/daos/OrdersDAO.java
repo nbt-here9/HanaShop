@@ -10,8 +10,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import javax.naming.NamingException;
 import thunb.dtos.HistoryDTO;
+import thunb.dtos.OrdersDTO;
 import thunb.utilities.DBHelpers;
 
 /**
@@ -71,32 +74,50 @@ public class OrdersDAO {
         return false;
     }
 
-    public HistoryDTO getOrderByID(String orderID, String username) throws NamingException, SQLException {
-        HistoryDTO order = null;
+    private List<OrdersDTO> listOrders;
+
+    public List<OrdersDTO> getListOrders() {
+        return listOrders;
+    }
+
+    
+
+    
+    
+    
+    public boolean getOrdersByUsername(String username) throws NamingException, SQLException {
+        OrdersDTO order = null;
+        boolean result = false;
         try {
             cn = DBHelpers.makeConnection();
             if (cn != null) {
-                String sql = "select customerName,customerAddress,customerPhone,orderDate,paymentMethod,paymentStatus,total "
-                        + "from Orders where orderID=? and username=?";
+                String sql = "SELECT orderID, customerName,customerAddress,"
+                        + "customerPhone,orderDate,paymentMethod,total "
+                        + "FROM Orders WHERE username=? ORDER BY orderDate DESC";
                 pst = cn.prepareStatement(sql);
-                pst.setString(1, orderID);
-                pst.setString(2, username);
+                pst.setString(1, username);
                 rs = pst.executeQuery();
-                if (rs.next()) {
+                while (rs.next()) {
+                    if (this.listOrders==null) {
+                        this.listOrders = new ArrayList<>();
+                    }
+                    
+                    String orderID = rs.getString("orderID");
                     String customerName = rs.getNString("customerName");
                     String customerAddress = rs.getNString("customerAddress");
                     String customerPhone = rs.getString("customerPhone");
                     Timestamp orderDate = rs.getTimestamp("orderDate");
                     int paymentMethod = rs.getInt("paymentMethod");
-                    int paymentStatus = rs.getInt("paymentStatus");
                     long total = rs.getLong("total");
-                    order = new HistoryDTO(null, null, orderID, username, customerName, customerAddress, customerPhone, orderDate, paymentMethod, paymentStatus, total, null);
+                    order = new OrdersDTO(orderID, username, customerName, customerAddress, customerPhone, orderDate, paymentMethod, total);
+                    this.listOrders.add(order);
+                    result = true;
                 }
             }
         } finally {
             closeConnection();
         }
-        return order;
+        return result;
     }
 
 }

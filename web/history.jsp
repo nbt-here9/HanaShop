@@ -10,6 +10,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="resources/css/jquery-ui.css">
+        <link rel="stylesheet" type="text/css" href="resources/css/productslist.css">
         <title>History</title>
     </head>
     <body>
@@ -17,10 +19,77 @@
 
         <c:if test="${sessionScope.LOGIN_USER.roleID eq 0}">
 
-            <h1 class="text-center text-muted">Your Shopping history</h1>
-            
-            
-            
+            <c:if test="${not empty sessionScope.HISTORY}">
+                <h1 class="text-center text-muted">Your Shopping history</h1><br>
+
+
+                <c:forEach var="order" items="${sessionScope.HISTORY}">
+
+
+
+                    <div style="padding: 0 100px; margin-top: 50px">
+                        <h4 class="login-heading mb-4">Your order: ${order.orderID}</h4>  
+                        <h5 class="login-heading mb-4" style=" margin-left: auto;">Date: ${order.orderDate}</h5>  
+                        
+                        <table class="table table-hover table-warning">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td>
+                                        <c:forEach var="productName" items="${order.productNameList}">
+                                            ${productName} <br>
+                                        </c:forEach>
+                                    </td>
+
+
+                                    <td>
+                                        <c:forEach var="detail" items="${order.detailList}">
+                                            ${detail.quantity} <br>
+                                        </c:forEach>
+                                    </td>
+
+                                    <td>
+                                        <c:forEach var="detail" items="${order.detailList}">
+                                            ${detail.total} (VND)<br>
+                                        </c:forEach>
+                                    </td>
+
+                                </tr>
+
+                                <tr style="border-bottom:2px solid #ffffff; border-top:2px solid #ffffff; font-weight: bold;">
+                                    <td colspan="2">Total bill: </td>
+                                    <td>${order.total} (VND)</td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="3">
+                                        <strong>Customer Name:</strong> ${order.customerName} <br>
+                                        <strong>Customer Phone number:</strong> ${order.customerPhone} <br>
+                                        <strong>Customer Address:</strong> ${order.customerAddress} <br>
+                                        <strong>Payment:</strong> <c:if test="${order.paymentMethod eq 0}">Cash payment upon delivery</c:if> <br>
+                                        </td>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>    
+
+                        </div>
+
+                        <br>
+                </c:forEach>
+
+
+
+            </c:if>
+
 
         </c:if>
 
