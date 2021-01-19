@@ -48,6 +48,7 @@ public class ConstantsKey {
     public static final String LOGIN_GOOGLE_SERVLET = "LoginGoogleServlet";
     public static final String VIEW_HISTORY_SERVLET = "ViewHistoryServlet";
 
+
     //Pages
     public static final String WELCOME_PAGE = "welcome.jsp";
     public static final String ERROR_PAGE = "error.jsp";

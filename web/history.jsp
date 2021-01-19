@@ -22,6 +22,42 @@
             <c:if test="${not empty sessionScope.HISTORY}">
                 <h1 class="text-center text-muted">Your Shopping history</h1><br>
 
+                <form style="width: 500px; margin: 0 auto" action="DispatchServlet" method="POST">
+                    <div class="text-center text-muted">
+                        <div class="row mb-4">
+                            <div class="col-md-6 form-group mb-0">
+                                <label>From:</label>
+                                <input class="form-control" type="datetime-local"name="txtFromDate" min="2018-06-07T00:00" step="1"
+                                       value="${param.txtFromDate}"/><br/>
+                            </div>                            
+                            <div class="col-md-6 form-group mb-0">
+                                <label>To:</label>
+                                <input class="form-control" type="datetime-local" name="txtToDate" min="2018-06-07T00:00" step="1"
+                                       value="${param.txtToDate}" /><br/>
+
+                            </div>
+                        </div>  
+                        <c:if test="${not empty requestScope.ERROR}">
+                            <div class="text-center text-muted">
+                                <font style="color: red">${requestScope.ERROR}</font><br/>
+                            </div>
+                        </c:if>
+                    </div>
+
+
+
+                    <div class="text-center text-muted">
+                        <input style="width: 220px" type="text" name="txtSearchValue" value="${param.txtSearchValue}"/>
+                    </div>
+                    <br>
+                    <div class="text-center text-muted">
+                        <input class="btn btn-info" type="submit" name="Action" value="Search History"/>
+                    </div>
+
+
+
+                </form>
+
 
                 <c:forEach var="order" items="${sessionScope.HISTORY}">
 
@@ -30,7 +66,7 @@
                     <div style="padding: 0 100px; margin-top: 50px">
                         <h4 class="login-heading mb-4">Your order: ${order.orderID}</h4>  
                         <h5 class="login-heading mb-4" style=" margin-left: auto;">Date: ${order.orderDate}</h5>  
-                        
+
                         <table class="table table-hover table-warning">
                             <thead class="thead-light">
                                 <tr>

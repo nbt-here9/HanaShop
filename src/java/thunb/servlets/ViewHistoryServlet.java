@@ -8,6 +8,8 @@ package thunb.servlets;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -50,17 +52,17 @@ public class ViewHistoryServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         String url = ConstantsKey.HISTORY_PAGE;
+        String valid = null;
         try {
             HttpSession session = request.getSession(false);
             if (session != null) {
-                UsersDTO login_user = (UsersDTO) session.getAttribute("LOGIN_USER");
-                if (login_user != null && login_user.getRoleID() == ConstantsKey.USER_ROLE) {
+                UsersDTO loginUser = (UsersDTO) session.getAttribute("LOGIN_USER");
+                if (loginUser != null && loginUser.getRoleID() == ConstantsKey.USER_ROLE) {
                     List<HistoryDTO> listHistory = null;
                     HistoryDTO history = null;
-                    
-                    
+
                     OrdersDAO dao = new OrdersDAO();
-                    boolean rs = dao.getOrdersByUsername(login_user.getUsername());
+                    boolean rs = dao.getOrdersByUsername(loginUser.getUsername());
                     if (rs) {
                         List<OrdersDTO> listOrders = dao.getListOrders();
                         for (OrdersDTO order : listOrders) {
@@ -91,8 +93,70 @@ public class ViewHistoryServlet extends HttpServlet {
                     }
 
                     if (listHistory != null) {
-                        session.setAttribute("HISTORY", listHistory);
+
+                        String txtSearchValue = (String) request.getParameter("txtSearchValue");
+                        String txtFromDate = (String) request.getParameter("txtFromDate");
+                        String txtToDate = (String) request.getParameter("txtToDate");
+
+                        List<HistoryDTO> searchResult = new ArrayList<>();
+                        if ((txtSearchValue != null && !txtSearchValue.trim().isEmpty())
+                                || (txtFromDate != null && !txtFromDate.trim().isEmpty()
+                                && txtToDate != null && !txtToDate.trim().isEmpty())) {
+
+                            //Search by product name
+                            if (txtSearchValue != null && !txtSearchValue.trim().isEmpty()) {
+                                txtSearchValue = txtSearchValue.trim();
+                                for (HistoryDTO order : listHistory) {
+                                    for (String proName : order.getProductNameList()) {
+                                        if (proName.contains(txtSearchValue)) {
+                                            searchResult.add(order);
+                                        }
+                                    }
+                                }
+                            }
+                            //Search by shopping date
+                            if (txtFromDate != null && !txtFromDate.trim().isEmpty()
+                                    && txtToDate != null && !txtToDate.trim().isEmpty()) {
+
+                                Timestamp fromDate, toDate;
+                                txtFromDate = txtFromDate.trim();
+                                txtToDate = txtToDate.trim();
+                                try {
+                                    LocalDateTime fromLDT = LocalDateTime.parse(txtFromDate);
+                                    LocalDateTime toLDT = LocalDateTime.parse(txtToDate);
+
+                                    fromDate = Timestamp.valueOf(fromLDT);
+                                    toDate = Timestamp.valueOf(toLDT);
+                                    if (fromDate.after(toDate)) {
+                                        valid = "FromDate Must be before ToDate";
+                                    }
+
+                                    //
+                                    for (HistoryDTO order : listHistory) {
+                                        Timestamp creatDate = order.getOrderDate();
+                                        if (creatDate.after(fromDate) && creatDate.before(toDate)) {
+                                            searchResult.add(order);
+                                        }
+                                    }
+
+                                } catch (DateTimeParseException ex) {
+                                    valid = "Invalid FromTo Date";
+                                }
+
+                            }
+                        }
+
+                        if (valid == null) {
+                            if (searchResult.isEmpty()) {
+                                session.setAttribute("HISTORY", listHistory);
+                            } else {
+                                session.setAttribute("HISTORY", searchResult);
+                            }
+                        } else {
+                            request.setAttribute("ERROR", valid);
+                        }
                     }
+
                 }
             }
         } catch (NamingException ex) {
