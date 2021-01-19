@@ -139,20 +139,8 @@ public class ViewHistoryServlet extends HttpServlet {
                                                 searchResult.remove(searchResult.get(i));
                                             }
                                         }
-//
-//                                        for (HistoryDTO order : searchResult) {
-//                                            Timestamp creatDate = order.getOrderDate();
-//                                            if (creatDate.after(fromDate) && creatDate.before(toDate)) {
-//                                                searchResult.add(order);
-//                                            }
-//                                        }
+
                                     } else {
-//                                        for (HistoryDTO order : listHistory) {
-//                                            Timestamp creatDate = order.getOrderDate();
-//                                            if (creatDate.after(fromDate) && creatDate.before(toDate)) {
-//                                                searchResult.add(order);
-//                                            }
-//                                        }
                                         
                                         for (int i = 0; i < listHistory.size(); i++) {
                                             Timestamp creatDate = listHistory.get(i).getOrderDate();
