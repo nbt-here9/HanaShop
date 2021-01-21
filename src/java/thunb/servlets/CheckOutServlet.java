@@ -23,7 +23,6 @@ import thunb.daos.OrderDetailsDAO;
 import thunb.daos.OrdersDAO;
 import thunb.daos.ProductsDAO;
 import thunb.dtos.UsersDTO;
-import thunb.errors.CartErrors;
 import thunb.errors.CheckOutErrors;
 import thunb.utilities.ConstantsKey;
 import thunb.utilities.Utilities;
@@ -62,6 +61,16 @@ public class CheckOutServlet extends HttpServlet {
                     String txtAddress = request.getParameter("txtAddress");
                     String txtPhone = request.getParameter("txtPhone");
 
+                    UsersDTO loginUser = (UsersDTO) session.getAttribute("LOGIN_USER");
+                    String loginUsername = null;
+                    String loginName = "";
+                    if (loginUser != null) {
+                        loginUsername = loginUser.getUsername();
+                        txtName = loginUser.getName();
+                        txtAddress = loginUser.getAddress();
+                        txtPhone = loginUser.getPhone();
+                    }
+
                     //Valid info
                     if (txtName == null || txtName.trim().isEmpty()) {
                         valid = false;
@@ -80,43 +89,37 @@ public class CheckOutServlet extends HttpServlet {
                         request.setAttribute("ERRORS", errors);
                     } //Check out
                     else {
-//                        String txtPaymentMethod = request.getParameter("txtPaymentMethod");
-//                        if (txtPaymentMethod != null && !txtPaymentMethod.trim().isEmpty() && txtPaymentMethod.matches("\\d+")) {
-//                            int paymentMethod = Integer.parseInt(txtPaymentMethod);
+                        String txtPaymentMethod = request.getParameter("txtPaymentMethod");
+                        if (txtPaymentMethod != null && !txtPaymentMethod.trim().isEmpty() && txtPaymentMethod.matches("\\d+")) {
+                            int paymentMethod = Integer.parseInt(txtPaymentMethod);
 
-                        UsersDTO loginUser = (UsersDTO) session.getAttribute("LOGIN_USER");
-                        String loginUsername = null;
-                        if (loginUser != null) {
-                            loginUsername = loginUser.getUsername();
-                        }
+                            OrdersDAO ordersDAO = new OrdersDAO();
+                            ProductsDAO productsDAO = new ProductsDAO();
 
-                        OrdersDAO ordersDAO = new OrdersDAO();
-                        ProductsDAO productsDAO = new ProductsDAO();
-                        
-                        int paymentMethod = ConstantsKey.COD;
-                        String newOrderID = Utilities.OrderIDGenerate();
-                        Timestamp orderDate = Utilities.getCurrentTime();
-                        
-                        boolean newOrder = ordersDAO.createOrder(newOrderID, loginUsername, txtName, txtAddress,
-                                txtPhone, orderDate, cart.total(), paymentMethod);
-                        if (newOrder) {
-                            OrderDetailsDAO orderDetailsDAO = new OrderDetailsDAO();
-                            Map<Integer, CartItemObject> items = cart.getItems();
-                            boolean rs = orderDetailsDAO.addOrderDetails(newOrderID, items);
-                            if (!rs) {
-                                request.setAttribute("CHECKOUT_FAILED", "FAILED");
+                            String newOrderID = Utilities.OrderIDGenerate();
+                            Timestamp orderDate = Utilities.getCurrentTime();
+
+                            boolean newOrder = ordersDAO.createOrder(newOrderID, loginUsername, txtName, txtAddress,
+                                    txtPhone, orderDate, cart.total(), paymentMethod);
+                            if (newOrder) {
+                                OrderDetailsDAO orderDetailsDAO = new OrderDetailsDAO();
+                                Map<Integer, CartItemObject> items = cart.getItems();
+                                boolean rs = orderDetailsDAO.addOrderDetails(newOrderID, items);
+                                if (!rs) {
+                                    request.setAttribute("CHECKOUT_FAILED", "FAILED");
 //                                //delete order
-                            } else {
-                                if (paymentMethod == ConstantsKey.COD) {
+                                } else {
+
                                     boolean decreaseStock = productsDAO.decreaseQuantityByID(items);
                                     if (decreaseStock) {
                                         request.setAttribute("CHECKOUT_SUCCESS", newOrderID);
+
                                         // session.removeAttribute("CART");
                                     }
+
                                 }
                             }
                         }
-//                        }
                     }
                 }
                 session.setAttribute("CHECK_AND_LOAD", false);

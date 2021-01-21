@@ -19,11 +19,7 @@
 
         <c:if test="${sessionScope.LOGIN_USER.roleID eq 0}">
 
-            <c:if test="${(requestScope.NO_RESULT) && ( (not empty param.txtFromDate && not empty param.txtToDate) || (not empty param.txtSearchValue) )}">
-                <div class="text-center text-muted">
-                    <font style="color: red">No result matched this search value!</font><br/>
-                </div>
-            </c:if>
+
             <c:if test="${not empty sessionScope.HISTORY}">
                 <h1 class="text-center text-muted">Your Shopping history</h1><br>
 
@@ -50,11 +46,19 @@
                     </div>
 
 
-
                     <div class="text-center text-muted">
                         <input style="width: 220px" type="text" name="txtSearchValue" value="${param.txtSearchValue}"/>
                     </div>
                     <br>
+                    
+                     <c:if test="${(requestScope.NO_RESULT) && ( (not empty param.txtFromDate && not empty param.txtToDate) || (not empty param.txtSearchValue) )}">
+                        <div class="text-center text-muted">
+                            <h3>
+                                <font style="color: red">No result matched this search value!</font><br/>
+                            </h3>
+                        </div>
+                    </c:if>
+                    
                     <div class="text-center text-muted">
                         <input class="btn btn-info" type="submit" name="Action" value="Search History"/>
                     </div>
@@ -114,7 +118,10 @@
                                         <strong>Customer Name:</strong> ${order.customerName} <br>
                                         <strong>Customer Phone number:</strong> ${order.customerPhone} <br>
                                         <strong>Customer Address:</strong> ${order.customerAddress} <br>
-                                        <strong>Payment:</strong> <c:if test="${order.paymentMethod eq 0}">Cash payment upon delivery</c:if> <br>
+                                        <strong>Payment:</strong> 
+                                        <c:if test="${order.paymentMethod eq 0}">Cash payment upon delivery</c:if>
+                                        <c:if test="${order.paymentMethod eq 1}">Paypal</c:if> 
+                                        <br>
                                         </td>
                                     </tr>
 

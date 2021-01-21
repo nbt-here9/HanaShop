@@ -26,6 +26,9 @@ public class ConstantsKey {
     public static final int DEFAULT_PAGE = 1;
     public static final int ORDERID_LENGTH = 10;
     public static final int COD = 0;
+    public static final int PAYPAL = 1;
+    public static final int EXCHANGE_RATE = 23000;
+    
 
     //Resources
     //Servlets

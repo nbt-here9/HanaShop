@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import thunb.cart.CartItemObject;
 import thunb.cart.CartObject;
+import thunb.daos.PaymentMethodsDAO;
 import thunb.daos.ProductsDAO;
 import thunb.dtos.UsersDTO;
 import thunb.errors.CartErrors;
@@ -89,7 +90,6 @@ public class LoadForCheckOutServlet extends HttpServlet {
                                     CartItemObject value = entry.getValue();
                                     int quantity = dao.getQuantityByID(key);
 
-                                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAA" + quantity);
                                     if (quantity < value.getQuantity()) {
                                         err = new CartErrors();
                                         err.setProductID(key);
@@ -114,21 +114,27 @@ public class LoadForCheckOutServlet extends HttpServlet {
                                 }
                             }
 
+                            PaymentMethodsDAO paymentDAO = new PaymentMethodsDAO();
+                            int total = paymentDAO.getPaymentMethodsList();
+                            if (total > 0) {
+                                request.setAttribute("PAYMENT_LIST", paymentDAO.getMethodList());
+                            }
+
                             if (isDelete) {
                                 if (err == null) {
                                     err = new CartErrors();
                                 }
                                 err.setStatusChangedErr(productIDErr + " is deleted!");
                             }
-
+                            double totalForPaypal = (double) Math.round(cart.total() / ConstantsKey.EXCHANGE_RATE * 100) / 100;
+                            session.setAttribute("TOTAL_BILL", totalForPaypal);
                         } else {
                             url = "DispatchServlet"
-                                                + "?Action=Check out";
+                                    + "?Action=Check out";
                         }
 
                         if (url.equals(ConstantsKey.ERROR_PAGE)) {
                             String action = request.getParameter("CartAction");
-                            System.out.println("BBBBBBbbbutttt: " + action);
                             if (action != null) {
                                 if (action.equals("Check out")) {
                                     url = "DispatchServlet"
@@ -152,6 +158,7 @@ public class LoadForCheckOutServlet extends HttpServlet {
                             request.setAttribute("ERROR", err);
                         }
                         session.setAttribute("CART", cart);
+
                     }
                 }
             }

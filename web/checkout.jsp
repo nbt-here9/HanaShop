@@ -27,12 +27,16 @@
 
 
         <c:if test="${empty sessionScope.LOGIN_USER}">
-            <h3 class="text-center">
+
+            <div class="text-center text-muted">
                 <h4>To check out, you must to </h4>
                 <form action="DispatchServlet">
                     <input type="submit" class="btn btn btn-info" value="Sign in" name="Action" />
                 </form>
-            </h3>
+            </div>
+
+
+
         </c:if>
 
         <c:if test="${not empty sessionScope.LOGIN_USER}">
@@ -121,16 +125,18 @@
                                                 </div>
                                                 <div class="form-group col-sm-4 ">
                                                     <label for="paymentMethod">Payment Method</label>
-                                                    <%--  <div id="paymentMethod" class="justify-content-between ">
-                                                          <c:forEach var="payment" items="${requestScope.PAYMENT_LIST}">
-                                                              <input type="radio" id="method" name="txtPaymentMethod" value="${payment.methodType}"/>
-                                                              <label for="method">${payment.methodName}</label>
-                                                          </c:forEach>
-                                                    </div>--%>
                                                     <div id="paymentMethod" class="justify-content-between ">
-
-                                                        <label for="method">Cash payment upon delivery</label>
+                                                        <c:forEach var="payment" items="${requestScope.PAYMENT_LIST}">
+                                                            <input type="radio" id="method" name="txtPaymentMethod" value="${payment.methodType}"/>
+                                                            <label for="method">${payment.methodName}</label>
+                                                        </c:forEach>
                                                     </div>
+                                                    <%--                                                    <div id="paymentMethod" class="justify-content-between ">
+
+                                                        <label for="method">Cash payment upon delivery</label> 
+                                                        <div id="paypal-button-container"></div>
+                                                    </div>--%>
+                                                    <div id="paypal-button-container"></div>
                                                 </div>
                                                 <div class="form-group col-sm-12">
                                                     <button type="submit" name="" value="Proceed" class="btn btn-info btn-block">Proceed</button>
@@ -148,12 +154,51 @@
 
             </c:if>
 
+
+
+
             <c:if test="${sessionScope.LOGIN_USER.roleID eq 1}">
                 <h1 class="text-center">You do not have access this function! <br>
                     <a href="DispatchServlet?Action=LoadData">Go Back!</a>
                 </h1>
             </c:if>
         </c:if>
+        <script src="https://www.paypal.com/sdk/js?client-id=ARLIyqpVS50SWQSS0lZV8cQhiwrKyT3eYJ-eyaSnW_Wzhu6E8qINB7RENx22j4QGl3mLx3gOfkiLbmbG"></script>
 
+        <script>
+            paypal.Buttons({
+                // Set up the transaction
+                createOrder: function (data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                                amount: {
+                                    value: '${(sessionScope.TOTAL_BILL)}'
+                                }
+                            }]
+                    });
+                },
+                // Finalize the transaction
+                onApprove: function (data, actions) {
+                    return actions.order.capture().then(function (details) {
+                        // Show a success message to the buyer
+                        var name = details.payer.name.given_name;
+                        var address1 = details.purchase_units[0].shipping.address.address_line_1;
+                        var address2 = details.purchase_units[0].shipping.address.address_line_2;
+                        var url = "DispatchServlet";
+                        var params = '?Action=CheckAndLoad&CartAction=Proceed&txtPaymentMethod=1'
+                        location.replace(url + params);
+                    });
+                },
+                style: {
+                    layout: 'horizontal',
+                    color: '',
+                    shape: 'pill',
+                    label: 'pay',
+                    height: 40
+                }
+            }).render('#paypal-button-container');
+            //This function displays Smart Payment Buttons on your web page.
+        </script>
     </body>
 </html>
+

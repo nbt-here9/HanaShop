@@ -13,7 +13,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import javax.naming.NamingException;
-import thunb.dtos.HistoryDTO;
 import thunb.dtos.OrdersDTO;
 import thunb.utilities.DBHelpers;
 
