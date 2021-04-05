@@ -93,14 +93,10 @@
                                         <c:if test="${product.statusID eq 1}">Active</c:if>
                                         <c:if test="${product.statusID eq 0}">Inactive</c:if>
                                         </td>  
-                                    <%--       <td>
-                                               <input type="hidden" name="txtProductID" value="${product.productID}" />
-                                               <input class="btn btn-info" type="submit" value="Edit" name="Action" />
-                                           </td>  
-                                    --%>
+                                   
                                     <td class="td-actions text-right">
                                         <input type="hidden" name="txtProductID" value="${product.productID}" />
-                                        <button type="submit" class="btn btn-info btn-just-icon btn-sm" 
+                                        <button type="submit" class="btn btn-success btn-just-icon btn-sm" 
                                                 data-original-title="Update"  title="Update" name="Action" value="Edit">
                                             <i class="material-icons">edit</i>
                                         </button>

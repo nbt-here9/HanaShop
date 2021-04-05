@@ -3,7 +3,7 @@
     Created on : Jan 5, 2021, 7:44:17 PM
     Author     : Banh Bao
 --%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -44,8 +44,8 @@
                                         <div class="d-flex justify-content-between">
                                             <div id="my-signin2" class="mr-auto ml-auto"></div>
                                         </div>
-
-                                        <a class="loginBtn loginBtn--google" href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8084/SE140803_HanaShop/LoginGoogleServlet&response_type=code
+                                        
+                                         <a class="loginBtn loginBtn--google" href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8084/SE140803_HanaShop/LoginGoogleServlet&response_type=code
                                            &client_id=596654673778-ie4v7opm6tudd91qv6pmfnnqvmp8fhov.apps.googleusercontent.com&approval_prompt=force">Login With Google</a> 
                                     </form>
 
